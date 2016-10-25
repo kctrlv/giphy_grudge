@@ -8,6 +8,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
 gem 'faraday'
+gem 'figaro'
 
 group :test do
   gem 'rspec-rails'
@@ -16,6 +17,8 @@ group :test do
   gem 'shoulda-matchers'
   gem 'database_cleaner'
   gem 'simplecov', require: false
+  gem 'vcr'
+  gem 'webmock'
 end
 
 group :production do
