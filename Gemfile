@@ -14,7 +14,7 @@ group :test do
   gem 'rspec-rails'
   gem 'capybara'
   gem 'launchy'
-  gem 'shoulda-matchers'
+  gem 'shoulda-matchers', require: false
   gem 'database_cleaner'
   gem 'simplecov', require: false
   gem 'vcr'
