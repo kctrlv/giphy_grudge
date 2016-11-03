@@ -7,6 +7,14 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
 
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
+    alert data['message']
+    alert data['user']
 
-  speak: ->
-    @perform 'speak'
+  speak: (message) ->
+    @perform 'speak', message: message
+
+$(document).on "keypress", '[data-behavior~=room_speaker]', (event) ->
+  if event.keyCode is 13
+    App.lobby.speak event.target.value
+    event.target.value = ''
+    event.preventDefault()

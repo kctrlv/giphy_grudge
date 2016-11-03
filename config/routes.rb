@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get 'lobbies/show'
-
   root to: 'home#index'
   resource :lobby, only: [:show]
 

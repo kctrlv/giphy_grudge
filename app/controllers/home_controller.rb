@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   def index
-    @user = current_user if current_user
+    redirect_to lobby_path if current_user
   end
 
   def restricted

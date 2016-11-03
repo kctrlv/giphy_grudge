@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
         user.token = raw_res[:access_token]
         user.save
         session[:user_id] = user.id
+        cookies.permanent.signed[:user_id] = user.id
         redirect_to lobby_path
       else
         flash[:danger] = "Sorry, this app is restricted to users of a particular Team"
@@ -21,6 +22,7 @@ class SessionsController < ApplicationController
       user.name = "Guest_#{uid}"
       user.save
       session[:user_id] = user.id
+      cookies.permanent.signed[:user_id] = user.id
       redirect_to lobby_path
     end
   end
