@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   def create
+    byebug
     res = Faraday.get("https://slack.com/api/oauth.access?client_id=#{ENV['slack_id']}&client_secret=#{ENV['slack_secret']}&code=#{params['code']}")
     raw_res = JSON.parse(res.body, symbolize_names:true)
     if raw_res[:team][:id] == ENV['turing_team_id']
