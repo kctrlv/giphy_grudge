@@ -9,6 +9,10 @@ class LobbyChannel < ApplicationCable::Channel
   end
 
   def speak(data)
-    ActionCable.server.broadcast 'lobby_channel', message: data['message']
+    # byebug
+    ActionCable.server.broadcast 'lobby_channel', {
+      message: data['message'],
+      user: current_user.first_name
+    }
   end
 end

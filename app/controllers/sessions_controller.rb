@@ -32,6 +32,7 @@ class SessionsController < ApplicationController
       current_user.destroy
     end
     session[:user_id] = nil
+    cookies.permanent.signed[:user_id] = nil
     redirect_to '/'
   end
 
