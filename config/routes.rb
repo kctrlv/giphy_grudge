@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
+  get 'lobbies/show'
+
   root to: 'home#index'
+  resource :lobby, only: [:show]
 
   get 'auth/slack/callback', to: 'sessions#create'
 
