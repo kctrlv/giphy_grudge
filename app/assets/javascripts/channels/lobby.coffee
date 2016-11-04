@@ -16,7 +16,7 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
   speak: (message) ->
     @perform 'speak', message: message
 
-$(document).on "keypress", '[data-behavior~=room_speaker]', (event) ->
+$(document).on "keypress", '[data-behavior~=lobby_speaker]', (event) ->
   if event.keyCode is 13
     App.lobby.speak event.target.value
     event.target.value = ''
