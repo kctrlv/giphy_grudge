@@ -9,6 +9,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
 gem 'faraday'
 gem 'figaro'
+gem 'redis', '3.3.1'
 
 group :test do
   gem 'rspec-rails'
