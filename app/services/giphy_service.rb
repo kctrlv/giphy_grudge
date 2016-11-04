@@ -7,7 +7,7 @@ class GiphyService
   end
 
   def self.translate(keyword)
-    get("/v1/gifs/translate", {s: keyword} )
+    get("/v1/gifs/translate", {s: keyword.tr(' ','+')} )
   end
 
   def self.fixed_height_translate(keyword)

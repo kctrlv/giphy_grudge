@@ -8,7 +8,10 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
     # alert data['user']
-    $('.messages').append(data['user'] + ": " + data['message'] + "<br>")
+    # $('.messages').append(data['user'] + ": " + data['message'] + "<br>")
+    reply = data['user'] + ': ' + '<img src="' + data['message'] + '"><br>'
+    # $('.messages').append(data['user'] + ': ' + data['message'] + '<br>' )
+    $('.messages').append(reply)
 
   speak: (message) ->
     @perform 'speak', message: message

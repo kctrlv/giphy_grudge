@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe GiphyService do
   it 'can get full translation by keyword' do
-    keyword = 'superman'
+    keyword = 'superman is cool'
     result = GiphyService.translate(keyword)
     expect(result[:data][:type]).to eq("gif")
   end

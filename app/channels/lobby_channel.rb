@@ -9,9 +9,8 @@ class LobbyChannel < ApplicationCable::Channel
   end
 
   def speak(data)
-    # byebug
     ActionCable.server.broadcast 'lobby_channel', {
-      message: data['message'],
+      message: GiphyService.fixed_height_translate(data['message']),
       user: current_user.first_name
     }
   end
