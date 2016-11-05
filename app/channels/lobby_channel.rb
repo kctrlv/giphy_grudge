@@ -2,10 +2,19 @@
 class LobbyChannel < ApplicationCable::Channel
   def subscribed
     stream_from "lobby_channel"
+    REDIS.sadd('onlineUsers', current_user.first_name)
+    ActionCable.server.broadcast 'lobby_channel', {
+      action: "userAppear",
+      user: current_user.first_name
+    }
   end
 
   def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
+    REDIS.srem('onlineUsers', current_user.first_name)
+    ActionCable.server.broadcast 'lobby_channel', {
+      action: "userDisappear",
+      user: current_user.first_name
+    }
   end
 
   def speak(data)

@@ -2,7 +2,9 @@
 
 <h5>Users Online:</h5>
 <ul class="users_online">
-
+  <% @onlineUsers.each do |user| %>
+    <li id="<%= user %>"> <%= user %> </li>
+  <% end %>
 </ul>
 
 
