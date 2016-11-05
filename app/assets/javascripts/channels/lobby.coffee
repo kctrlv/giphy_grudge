@@ -1,4 +1,9 @@
 App.lobby = App.cable.subscriptions.create "LobbyChannel",
+  appendGiphy: (user, message) ->
+    reply = user + ': ' + '<img src="' + message + '"><br>'
+    $('.messages').append(reply)
+    $('html,body').animate({scrollTop: $(document).height()}, 1000);
+
   connected: ->
     # Called when the subscription is ready for use on the server
 
@@ -9,11 +14,7 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     # Called when there's incoming data on the websocket for this channel
     switch data.action
       when "speak"
-        reply = data['user'] + ': ' + '<img src="' + data['message'] + '"><br>'
-        $('.messages').append(reply)
-      # when "appear"
-      #   reply = '<li>' + data['user'] + '</li>'
-      #   $('.users-online').append(data)
+        App.lobby.appendGiphy(data['user'], data['message'])
 
   speak: (message) ->
     @perform 'speak', message: message
