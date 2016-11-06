@@ -34,6 +34,7 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     @perform 'connected'
 
   disconnected: ->
+    debugger;
 
 
   received: (data) ->

@@ -1,5 +1,7 @@
 <h1>Welcome to the Lobby</h1>
 
+<%= link_to "Game", game_path %>
+
 <section class='responses'>
   <div class="messages">
   </div>
@@ -14,6 +16,8 @@
   </ul>
 </section>
 
-<form>
-  <input class='style-1' type="text" data-behavior='lobby_speaker'>
-</form>
+<span class='input-container'>
+  <form>
+    <input class='style-1' type="text" data-behavior='lobby_speaker'>
+  </form>
+</span>

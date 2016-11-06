@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'game/show'
+
   root to: 'home#index'
   resource :lobby, only: [:show]
 
@@ -8,4 +10,6 @@ Rails.application.routes.draw do
   post '/login', to: 'sessions#create'
 
   get '/restricted', to: 'home#restricted'
+
+  get '/game', to: 'game#show'
 end
