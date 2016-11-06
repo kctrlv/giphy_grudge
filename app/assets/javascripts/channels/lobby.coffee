@@ -34,8 +34,6 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     @perform 'connected'
 
   disconnected: ->
-    debugger;
-
 
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
