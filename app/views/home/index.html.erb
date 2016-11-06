@@ -1,6 +1,6 @@
 <div class="slack-login">
   <%= link_to image_tag("https://api.slack.com/img/sign_in_with_slack.png"),
-  "https://slack.com/oauth/authorize?scope=identity.basic&client_id=#{ENV['slack_id']}" %>
+  "https://slack.com/oauth/authorize?scope=identity.basic+identity.avatar&client_id=#{ENV['slack_id']}" %>
 </div>
 
 <p>

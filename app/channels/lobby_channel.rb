@@ -5,26 +5,38 @@ class LobbyChannel < ApplicationCable::Channel
   end
 
   def connected
-    REDIS.sadd('onlineUsers', current_user.first_name)
-    ActionCable.server.broadcast 'lobby_channel', {
-      action: "userAppear",
-      user: current_user.first_name
-    }
+    if !REDIS.sismember('onlineUsers', current_user.id)
+      REDIS.sadd('onlineUsers', current_user.id)
+      ActionCable.server.broadcast 'lobby_channel', {
+        action: "userAppear",
+        uid: current_user.id,
+        user: current_user.first_name
+      }
+    else
+      REDIS.incr("ghost#{current_user.id}")
+    end
   end
 
   def unsubscribed
-    REDIS.srem('onlineUsers', current_user.first_name)
-    ActionCable.server.broadcast 'lobby_channel', {
-      action: "userDisappear",
-      user: current_user.first_name
-    }
+    if REDIS.get("ghost#{current_user.id}").to_i > 0
+      REDIS.decr("ghost#{current_user.id}")
+    else
+      REDIS.srem('onlineUsers', current_user.id)
+      ActionCable.server.broadcast 'lobby_channel', {
+        action: "userDisappear",
+        uid: current_user.id,
+        user: current_user.first_name
+      }
+    end
   end
 
   def speak(data)
+    user_handle = current_user.avatar || current_user.first_name
     ActionCable.server.broadcast 'lobby_channel', {
       action: "speak",
       message: GiphyService.fixed_height_translate(data['message']),
-      user: current_user.first_name
+      user: user_handle,
+      has_avatar: !!current_user.avatar
     }
   end
 end

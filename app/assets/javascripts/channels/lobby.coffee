@@ -1,19 +1,22 @@
 App.lobby = App.cable.subscriptions.create "LobbyChannel",
-  appendGiphy: (user, message) ->
-    reply = '<div class="giphy"><span class="username">' + user + '</span> ' + '<img src="' + message + '"></div><br>'
+  appendGiphy: (user, message, has_avatar) ->
+    if has_avatar
+      reply = '<div class="giphy"><img class="avatar-img" src="' + user + '"><img class="giphy-img" src="' + message + '"></div><br>'
+    else
+      reply = '<div class="giphy"><span class="username">' + user + '</span> ' + '<img class="giphy-img" src="' + message + '"></div><br>'
     $('.messages').append(reply)
     # $('html,body').animate({scrollTop: $(document).height()}, 1000)
     # $('.responses').animate({ scrollTop:  $('.messages:last-child').offset().top - 300 });
     $('.responses').animate({scrollTop: $('.messages').height()}, 1000)
 
-  userAppear: (user) ->
+  userAppear: (user, uid) ->
     $ ->
-      content =  '<li id="' + user + '">' + user + '</li>'
+      content =  '<li id="' + uid + '">' + user + '</li>'
       $('.users_online').append(content)
 
-  userDisappear: (user) ->
+  userDisappear: (user, uid) ->
     $(document).ready ->
-      $('#' + user).remove()
+      $('#' + uid).remove()
 
   connected: ->
     @perform 'connected'
@@ -25,11 +28,11 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     # Called when there's incoming data on the websocket for this channel
     switch data.action
       when "speak"
-        App.lobby.appendGiphy(data['user'], data['message'])
+        App.lobby.appendGiphy(data['user'], data['message'], data['has_avatar'])
       when 'userAppear'
-        App.lobby.userAppear(data['user'])
+        App.lobby.userAppear(data['user'], data['uid'])
       when 'userDisappear'
-        App.lobby.userDisappear(data['user'])
+        App.lobby.userDisappear(data['user'], data['uid'])
 
   speak: (message) ->
     @perform 'speak', message: message
