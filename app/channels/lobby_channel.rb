@@ -2,6 +2,9 @@
 class LobbyChannel < ApplicationCable::Channel
   def subscribed
     stream_from "lobby_channel"
+  end
+
+  def connected
     REDIS.sadd('onlineUsers', current_user.first_name)
     ActionCable.server.broadcast 'lobby_channel', {
       action: "userAppear",

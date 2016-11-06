@@ -5,7 +5,7 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     $('html,body').animate({scrollTop: $(document).height()}, 1000)
 
   userAppear: (user) ->
-    $(document).ready ->
+    $ ->
       content =  '<li id="' + user + '">' + user + '</li>'
       $('.users_online').append(content)
 
@@ -14,7 +14,7 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
       $('#' + user).remove()
 
   connected: ->
-    # Called when the subscription is ready for use on the server
+    @perform 'connected'
 
   disconnected: ->
     # Called when the subscription has been terminated by the server
@@ -34,6 +34,7 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
 
 $(document).on "keypress", '[data-behavior~=lobby_speaker]', (event) ->
   if event.keyCode is 13
-    App.lobby.speak event.target.value
+    if event.target.value
+      App.lobby.speak event.target.value
     event.target.value = ''
     event.preventDefault()
