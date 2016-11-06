@@ -9,7 +9,55 @@
 //   padding: 10px;
 // }
 
+h1 {
+  text-align: center;
+}
+
+.giphy {
+  padding-left: 10px;
+  text-align: left;
+}
+
+.responses {
+  overflow: scroll;
+  position: fixed;
+  bottom: 60px;
+  top: 100px;
+  right: 23%;
+  left: 10px;
+  margin: auto;
+  background-color: #222;
+  // border: 3px solid black;
+}
+
+.users_online {
+  list-style-type: circle;
+}
+
+.users_online li {
+  width: 100%;
+  margin: auto;
+  text-align: left;
+}
+
+.information {
+  text-align: center;
+  bottom: 60px;
+  top: 100px;
+  overflow: scroll;
+  position: fixed;
+  right: 10px;
+  left: 77%;
+  margin: auto;
+  background-color: #111;
+  // border: 3px solid white;
+}
+
 input[type="text"] {
+  position: fixed;
+  bottom: 10px;
+  width: 93%;
+  margin: 0;
   padding: 10px;
   border: 2px solid black;
   border-radius:5px;

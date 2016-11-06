@@ -1,8 +1,10 @@
 App.lobby = App.cable.subscriptions.create "LobbyChannel",
   appendGiphy: (user, message) ->
-    reply = user + ': ' + '<img src="' + message + '"><br>'
+    reply = '<div class="giphy"><span class="username">' + user + '</span> ' + '<img src="' + message + '"></div><br>'
     $('.messages').append(reply)
-    $('html,body').animate({scrollTop: $(document).height()}, 1000)
+    # $('html,body').animate({scrollTop: $(document).height()}, 1000)
+    # $('.responses').animate({ scrollTop:  $('.messages:last-child').offset().top - 300 });
+    $('.responses').animate({scrollTop: $('.messages').height()}, 1000)
 
   userAppear: (user) ->
     $ ->
