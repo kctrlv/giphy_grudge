@@ -7,7 +7,12 @@ class GiphyService
   end
 
   def self.translate(keyword)
-    get("/v1/gifs/translate", {s: keyword.tr(' ','+')} )
+    result = get("/v1/gifs/translate", {s: keyword.tr(' ','+')} )
+    if result[:data].empty?
+      get("/v1/gifs/translate", {s: 'error'} )
+    else
+      result
+    end
   end
 
   def self.fixed_height_translate(keyword)

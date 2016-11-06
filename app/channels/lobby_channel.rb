@@ -4,12 +4,25 @@ class LobbyChannel < ApplicationCable::Channel
     stream_from "lobby_channel"
   end
 
+  def connected
+    REDIS.sadd('onlineUsers', current_user.first_name)
+    ActionCable.server.broadcast 'lobby_channel', {
+      action: "userAppear",
+      user: current_user.first_name
+    }
+  end
+
   def unsubscribed
-    # Any cleanup needed when channel is unsubscribed
+    REDIS.srem('onlineUsers', current_user.first_name)
+    ActionCable.server.broadcast 'lobby_channel', {
+      action: "userDisappear",
+      user: current_user.first_name
+    }
   end
 
   def speak(data)
     ActionCable.server.broadcast 'lobby_channel', {
+      action: "speak",
       message: GiphyService.fixed_height_translate(data['message']),
       user: current_user.first_name
     }

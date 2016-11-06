@@ -1,10 +1,19 @@
 <h1>Welcome to the Lobby</h1>
 
+<section class='responses'>
+  <div class="messages">
+  </div>
+</section>
+
+<section class='information'>
+  <h5>Online Users</h5>
+  <ul class="users_online">
+    <% @onlineUsers.each do |user| %>
+      <li id="<%= user %>"> <%= user %> </li>
+    <% end %>
+  </ul>
+</section>
+
 <form>
-  <input type="hidden" id="speaker" value="#{@user}" >
-  <input type="text" data-behavior='room_speaker'>
+  <input class='style-1' type="text" data-behavior='lobby_speaker'>
 </form>
-
-<div class="messages">
-
-</div>
