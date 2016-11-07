@@ -7,7 +7,7 @@ module ApplicationCable
     end
 
     def disconnect
-      self.current_user = nil
+      # self.current_user = nil
     end
 
     protected
