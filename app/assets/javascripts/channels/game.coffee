@@ -1,6 +1,5 @@
 App.game = App.cable.subscriptions.create "GameChannel",
   connected: ->
-    debugger;
     # Called when the subscription is ready for use on the server
 
   disconnected: ->

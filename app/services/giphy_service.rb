@@ -8,7 +8,7 @@ class GiphyService
 
   def self.translate(keyword)
     result = get("/v1/gifs/translate", {s: keyword.tr(' ','+')} )
-    if result[:data].empty?
+    if !result[:data] || result[:data].empty?
       get("/v1/gifs/translate", {s: 'error'} )
     else
       result
@@ -18,5 +18,10 @@ class GiphyService
   def self.fixed_height_translate(keyword)
     result = translate(keyword)
     result[:data][:images][:fixed_height][:url]
+  end
+
+  def self.random_image
+    result = get("/v1/gifs/random", {})
+    result[:data][:fixed_height_downsampled_url]
   end
 end

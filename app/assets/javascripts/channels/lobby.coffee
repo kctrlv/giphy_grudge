@@ -1,23 +1,54 @@
 App.lobby = App.cable.subscriptions.create "LobbyChannel",
+  append: (html) ->
+    $('.messages').append(html)
+    $('.responses').animate({scrollTop: $('.messages').height()}, 1000)
+
   appendGiphy: (user, message, has_avatar) ->
     if has_avatar
-      reply = '<div class="giphy"><img class="avatar-img" src="' + user + '"><img class="giphy-img" src="' + message + '"></div><br>'
+      html = '<div class="giphy"><img class="avatar-img" src="' + user + '"><img class="giphy-img" src="' + message + '"></div>'
     else
-      reply = '<div class="giphy"><span class="username">' + user + '</span> ' + '<img class="giphy-img" src="' + message + '"></div><br>'
-    $('.messages').append(reply)
-    # $('html,body').animate({scrollTop: $(document).height()}, 1000)
-    # $('.responses').animate({ scrollTop:  $('.messages:last-child').offset().top - 300 });
-    $('.responses').animate({scrollTop: $('.messages').height()}, 1000)
+      html = '<div class="giphy"><span class="username">' + user + '</span> ' + '<img class="giphy-img" src="' + message + '"></div>'
+    App.lobby.append(html)
+
+  appendRandomGiphy: (user, message, has_avatar) ->
+    if has_avatar
+      html = '<div class="giphy"><img class="avatar-img" src="' + user + '"><img class="random-giphy" src="' + message + '"></div>'
+    else
+      html = '<div class="giphy"><span class="username">' + user + '</span> ' + '<img class="random-giphy" src="' + message + '"></div>'
+    App.lobby.append(html)
+
+
+  appendText: (user, message, has_avatar) ->
+    if has_avatar
+      html = '<div class="giphy"><img class="avatar-img" src="' + user + '"><span class="user-text">' + message + '</span></div>'
+    else
+      html = '<div class="giphy"><span class="username">' + user + '</span> ' + '<span class="user-text">' + message + '</span></div>'
+    App.lobby.append(html)
+
+  informCommands: ->
+    html = '''
+        <table class='inform'>
+          <tr>
+            <td>.?</td>
+            <td>Display available commands</td>
+          </tr>
+          <tr>
+            <td>.t</td>
+            <td>Prepend message to type clear text</td>
+          </tr>
+          <tr>
+            <td>.r</td>
+            <td>Post random giphy</td>
+          </tr>
+        </table>
+    '''
+    App.lobby.append(html)
 
   announceUserOnline: (user) ->
-    announcement = '<div class="announce">' + user + ' has joined </div><br>'
-    $('.messages').append(announcement)
-    $('.responses').animate({scrollTop: $('.messages').height()}, 1000)
+    App.lobby.append('<div class="announce">' + user + ' has joined </div>')
 
   announceUserOffline: (user) ->
-    announcement = '<div class="announce">' + user + ' has left </div><br>'
-    $('.messages').append(announcement)
-    $('.responses').animate({scrollTop: $('.messages').height()}, 1000)
+    App.lobby.append('<div class="announce">' + user + ' has left </div>')
 
   userAppear: (user, uid) ->
     $ ->
@@ -38,12 +69,18 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
     switch data.action
-      when "speak"
+      when "giphy"
         App.lobby.appendGiphy(data['user'], data['message'], data['has_avatar'])
+      when 'randomgiphy'
+        App.lobby.appendRandomGiphy(data['user'], data['message'], data['has_avatar'])
+      when "text"
+        App.lobby.appendText(data['user'], data['message'], data['has_avatar'])
       when 'userAppear'
         App.lobby.userAppear(data['user'], data['uid'])
       when 'userDisappear'
         App.lobby.userDisappear(data['user'], data['uid'])
+      when 'inform'
+        App.lobby.informCommands()
 
   speak: (message) ->
     @perform 'speak', message: message

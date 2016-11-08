@@ -32,11 +32,24 @@ class LobbyChannel < ApplicationCable::Channel
 
   def speak(data)
     user_handle = current_user.avatar || current_user.first_name
+    action, message = determine_action_and_message(data)
     ActionCable.server.broadcast 'lobby_channel', {
-      action: "speak",
-      message: GiphyService.fixed_height_translate(data['message']),
+      action: action,
+      message: message,
       user: user_handle,
       has_avatar: !!current_user.avatar
     }
+  end
+
+  def determine_action_and_message(data)
+    if data['message'].split.first == '.t'
+      return ['text', data['message'][3..-1] || '']
+    elsif data['message'].split.first == '.r'
+      return ['randomgiphy', GiphyService.random_image]
+    elsif data['message'].split.first == '.?'
+      return ['inform', '']
+    else
+      return ['giphy', GiphyService.fixed_height_translate(data['message'])]
+    end
   end
 end
