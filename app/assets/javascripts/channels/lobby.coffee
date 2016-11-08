@@ -1,7 +1,11 @@
 App.lobby = App.cable.subscriptions.create "LobbyChannel",
+
   append: (html) ->
     $('.messages').append(html)
     $('.responses').animate({scrollTop: $('.messages').height()}, 1000)
+
+  clear: ->
+    $('.messages').empty()
 
   appendGiphy: (user, message, has_avatar) ->
     if has_avatar
@@ -66,6 +70,35 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
 
   disconnected: ->
 
+  gameStart: (players) ->
+    App.lobby.clear()
+    html = '''
+    <div class='inform'>
+      A new round is about to begin with the following players: <br>'''+
+      players + '''
+    </div>
+    '''
+    App.lobby.append(html)
+
+  gameCard: (card) ->
+    html = '''
+    <div class='card'>''' +
+      card + '''
+    </div>
+    '''
+    App.lobby.append(html)
+
+  gameListen: ->
+    # App.lobby.gameListen = true
+    @perform 'start_listen'
+
+  gameStopListen: ->
+    # App.lobby.gameListen = false
+    @perform 'stop_listen'
+
+  gameReceivedReply: (user) ->
+    App.lobby.append('<div class="announce">' + user + ' has left a reply.</div>')
+
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
     switch data.action
@@ -81,6 +114,16 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
         App.lobby.userDisappear(data['user'], data['uid'])
       when 'inform'
         App.lobby.informCommands()
+      when 'game_start'
+        App.lobby.gameStart(data['players'])
+      when 'game_card'
+        App.lobby.gameCard(data['card'])
+      when 'game_listen'
+        App.lobby.gameListen()
+      when 'game_stop_listen'
+        App.lobby.gameStopListen()
+      when 'game_received_reply'
+        App.lobby.gameReceivedReply(data['user'])
 
   speak: (message) ->
     @perform 'speak', message: message

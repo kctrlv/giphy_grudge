@@ -1,5 +1,7 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
 class LobbyChannel < ApplicationCable::Channel
+  attr_reader :listen
+
   def subscribed
     stream_from "lobby_channel"
   end
@@ -31,25 +33,54 @@ class LobbyChannel < ApplicationCable::Channel
   end
 
   def speak(data)
-    user_handle = current_user.avatar || current_user.first_name
-    action, message = determine_action_and_message(data)
-    ActionCable.server.broadcast 'lobby_channel', {
-      action: action,
-      message: message,
-      user: user_handle,
-      has_avatar: !!current_user.avatar
-    }
+    if @listen
+      game_speak(data)
+    else
+      user_handle = current_user.avatar || current_user.first_name
+      action, message = determine_action_and_message(data)
+      ActionCable.server.broadcast 'lobby_channel', {
+        action: action,
+        message: message,
+        user: user_handle,
+        has_avatar: !!current_user.avatar
+      }
+    end
+  end
+
+  def game_speak(data)
+    if LobbyGame.players.include? current_user.name
+      LobbyGame.get_reply(current_user.name, GiphyService.fixed_height_translate(data['message']))
+    # else
+    #   LobbyGame.announce_locked_to_current_players
+    end
+  end
+
+  def start_listen
+    @listen = true
+  end
+
+  def stop_listen
+    @listen = false
   end
 
   def determine_action_and_message(data)
     if data['message'].split.first == '.t'
       return ['text', data['message'][3..-1] || '']
-    elsif data['message'].split.first == '.r'
+    elsif data['message'] == '.r'
       return ['randomgiphy', GiphyService.random_image]
     elsif data['message'].split.first == '.?'
       return ['inform', '']
+    elsif data['message'] == '.play'
+      return playRound
     else
       return ['giphy', GiphyService.fixed_height_translate(data['message'])]
     end
+  end
+
+  def playRound
+    return nil unless REDIS.smembers('players').empty?
+    player_ids = REDIS.smembers('onlineUsers')
+    players = player_ids.map { |id| User.find_by(id: id) }.compact
+    LobbyGame.start(players)
   end
 end

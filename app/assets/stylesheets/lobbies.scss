@@ -96,6 +96,19 @@ h1 a{
   border: 1px solid yellow;
 }
 
+.card {
+  border: 1px solid red;
+  background-color: #ccc;
+  height: 200px;
+  width: 150px;
+  margin: 0 auto;
+  padding: 10px;
+  color: black;
+  border-radius: 10px;
+  vertical-align: middle;
+  margin-bottom: 10px;
+}
+
 .giphy-img {
   vertical-align: middle;
   border: 1px solid black;
