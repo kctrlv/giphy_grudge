@@ -1,5 +1,6 @@
 App.lobby = App.cable.subscriptions.create "LobbyChannel",
 
+
   append: (html) ->
     $('.messages').append(html)
     $('.responses').animate({scrollTop: $('.messages').height()}, 1000)
@@ -13,6 +14,26 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     else
       html = '<div class="giphy"><span class="username">' + user + '</span> ' + '<img class="giphy-img" src="' + message + '"></div>'
     App.lobby.append(html)
+
+  shuffle: (source) ->
+    # Coffeescript-cookbook
+    return source unless source.length >= 2
+    for index in [source.length-1..1]
+      randomIndex = Math.floor Math.random() * (index + 1)
+      [source[index], source[randomIndex]] = [source[randomIndex], source[index]]
+    source
+
+  gameStartVote: (candidates) ->
+    App.lobby.clear()
+    html = '''
+    <div class='inform'>
+      Everyone has submitted a reply. Please click your favorite one
+    </div>
+    '''
+    App.lobby.append(html)
+    App.lobby.appendGiphy(i, message, false) for message, i in App.lobby.shuffle(candidates)
+    @perform 'listen_for_vote'
+
 
   appendRandomGiphy: (user, message, has_avatar) ->
     if has_avatar
@@ -89,15 +110,36 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     App.lobby.append(html)
 
   gameListen: ->
-    # App.lobby.gameListen = true
     @perform 'start_listen'
 
   gameStopListen: ->
-    # App.lobby.gameListen = false
     @perform 'stop_listen'
 
   gameReceivedReply: (user) ->
     App.lobby.append('<div class="announce">' + user + ' has left a reply.</div>')
+
+  gameReceivedVote: (user) ->
+    App.lobby.append('<div class="announce">' + user + ' has left a vote. Only the last vote is counted.</div>')
+
+  gameDraw: ->
+    App.lobby.clear()
+    html = '''
+    <div class='inform'>
+      The game is a draw! Please try again.
+    </div>
+    '''
+    App.lobby.append(html)
+
+
+  gameWinner: (user, votes, image) ->
+    App.lobby.clear()
+    html = '''
+    <div class='inform'>
+      The winner is ''' + user + ''' with ''' + votes + ''' votes!
+    </div>
+    '''
+    App.lobby.append(html)
+    App.lobby.appendGiphy('---', image, false)
 
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
@@ -124,9 +166,20 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
         App.lobby.gameStopListen()
       when 'game_received_reply'
         App.lobby.gameReceivedReply(data['user'])
+      when 'game_start_vote'
+        App.lobby.gameStartVote(data['candidates'])
+      when 'game_received_vote'
+        App.lobby.gameReceivedVote(data['user'])
+      when 'game_draw'
+        App.lobby.gameDraw()
+      when 'game_winner'
+        App.lobby.gameWinner(data['user'], data['votes'], data['image'])
 
   speak: (message) ->
     @perform 'speak', message: message
+
+  click_image: (image) ->
+    @perform 'click_image', image: image
 
 $(document).on "keypress", '[data-behavior~=lobby_speaker]', (event) ->
   if event.keyCode is 13
@@ -134,3 +187,16 @@ $(document).on "keypress", '[data-behavior~=lobby_speaker]', (event) ->
       App.lobby.speak event.target.value
     event.target.value = ''
     event.preventDefault()
+
+$(document).on "click", '.giphy-img', ->
+  App.lobby.click_image $(this).attr('src')
+
+
+
+# $('.giphy-img').click ->
+#   App.lobby.click_image $(this).attr('src')
+
+# $ ->
+#   $('img').click ->
+#     alert 'You Clicked Me'
+# $('body').on('click','img',function(){alert('it works');})

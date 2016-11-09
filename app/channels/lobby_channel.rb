@@ -1,6 +1,6 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
 class LobbyChannel < ApplicationCable::Channel
-  attr_reader :listen
+  attr_reader :listen, :listen_for_vote
 
   def subscribed
     stream_from "lobby_channel"
@@ -33,7 +33,7 @@ class LobbyChannel < ApplicationCable::Channel
   end
 
   def speak(data)
-    if @listen
+    if @listen == true
       game_speak(data)
     else
       user_handle = current_user.avatar || current_user.first_name
@@ -49,7 +49,7 @@ class LobbyChannel < ApplicationCable::Channel
 
   def game_speak(data)
     if LobbyGame.players.include? current_user.name
-      LobbyGame.get_reply(current_user.name, GiphyService.fixed_height_translate(data['message']))
+        LobbyGame.get_reply(current_user.name, GiphyService.fixed_height_translate(data['message']))
     # else
     #   LobbyGame.announce_locked_to_current_players
     end
@@ -59,8 +59,21 @@ class LobbyChannel < ApplicationCable::Channel
     @listen = true
   end
 
+  def listen_for_vote
+    @listen_for_vote = true
+  end
+
   def stop_listen
     @listen = false
+    @listen_for_vote = false
+  end
+
+  def click_image(data)
+    if @listen_for_vote
+      if LobbyGame.players.include? current_user.name
+        LobbyGame.get_vote(current_user.name, data['image'])
+      end
+    end
   end
 
   def determine_action_and_message(data)
