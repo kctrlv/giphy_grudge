@@ -134,7 +134,7 @@ h1 a{
 
 .input-container {
   display: block;
-  overflow: hidden;
+  // overflow: hidden;
   padding-right:4px;padding-left:1px;margin-right:2px;
   width: 100%;
 }
@@ -157,6 +157,7 @@ input[type="text"] {
   font-family: Andale Mono;
   color: transparent;
   text-shadow: 0 0 0 gray;
+  // -webkit-transform: translateZ(0)
 }
 
 input[type="text"]:focus,
