@@ -9,9 +9,12 @@
 
 <section class='information'>
   <h5>Online Users</h5>
-  <ul class="users_online">
+  <table class="users_online">
     <% @onlineUsers.each do |user| %>
-      <li id="<%= user.id %>"> <%= user.first_name %> </li>
+      <tr id="<%= user.id %>">
+        <td> <%= user.first_name %> </td>
+        <td> <%= user.points %> </td>
+      </tr>
     <% end %>
   </ul>
 </section>

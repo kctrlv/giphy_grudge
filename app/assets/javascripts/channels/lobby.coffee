@@ -85,7 +85,11 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
 
   userAppear: (user, uid) ->
     $ ->
-      content =  '<li id="' + uid + '">' + user + '</li>'
+      content = '''
+      <tr id="''' + uid + '''">
+        <td>''' + user + '''</td>
+      </tr>
+      '''
       $('.users_online').append(content)
       App.lobby.announceUserOnline(user)
 
