@@ -1,3 +1,43 @@
 // Place all the styles related to the home controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+body {
+  width: 100%;
+  text-align: center;
+  position: fixed;
+  font-family: Andale Mono;
+}
+
+.site-title {
+  font-size: 30px;
+  top: 40px;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+}
+
+.logins {
+  padding-top: 10px;
+  font-size: 20px;
+  top: 150px;
+  width: 100%;
+  text-align: center;
+  position: fixed;
+}
+
+.warning {
+  border: 1px solid red;
+  border-radius: 10px;
+  padding: 5px;
+  position: absolute;
+  font-size: 12px;
+  text-align: center;
+  margin: auto;
+  right: 0;
+  left: 0;
+  bottom: 40px;
+  max-width: 40em;
+  position: fixed;
+
+}
