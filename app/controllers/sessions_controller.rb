@@ -8,6 +8,7 @@ class SessionsController < ApplicationController
         user.name = raw_res[:user][:name]
         user.uid = raw_res[:user][:id]
         user.token = raw_res[:access_token]
+        user.avatar = raw_res[:user][:image_72]
         user.save
         session[:user_id] = user.id
         cookies.permanent.signed[:user_id] = user.id
@@ -28,7 +29,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    unless current_user.token
+    if current_user && !current_user.token
       current_user.destroy
     end
     session[:user_id] = nil
