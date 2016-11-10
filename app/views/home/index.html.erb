@@ -1,0 +1,26 @@
+<div class="site-title">
+  giphy_grudge
+</div>
+
+<div class='logins'>
+  <div class="slack-login">
+    <%= link_to image_tag("https://api.slack.com/img/sign_in_with_slack.png"),
+    "https://slack.com/oauth/authorize?scope=identity.basic+identity.avatar&client_id=#{ENV['slack_id']}" %>
+  </div>
+
+  <p>
+    or
+  </p>
+
+  <div class="guest-play">
+    <%= button_to "Play as Guest", login_path %>
+  </div>
+</div>
+
+
+<div class="warning">
+  This is an actioncable chatroom experiment using Giphy's API. <br>
+  The messages entered here are not stored outside of the browser. <br>
+  The cards in the included minigame may be offensive to some. <br>
+  Type '.?' at anytime to see the commands. Enter at your own risk.
+</div>

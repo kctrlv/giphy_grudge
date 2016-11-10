@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>SlackPersonalProject</title>
+    <title>giphy_grudge</title>
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
@@ -9,6 +9,15 @@
   </head>
 
   <body>
-    <%= yield %>
+    <% flash.each do |type, message| %>
+      <div class="alert alert-<%= type %>">
+        <%= message %>
+      </div>
+    <% end %>
+    <% if current_user %>
+      <span>Welcome <%= current_user.first_name %></span>
+      <%= link_to "Logout", logout_path %>
+    <% end %>
+  <%= yield %>
   </body>
 </html>

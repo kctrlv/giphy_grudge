@@ -1,0 +1,26 @@
+<section class='welcome'>
+  <h1>Welcome to the Lobby</h1>
+</section>
+
+<section class='responses'>
+  <div class="messages">
+  </div>
+</section>
+
+<section class='information'>
+  <h5>Online Users</h5>
+  <table class="users_online">
+    <% @onlineUsers.each do |user| %>
+      <tr id="<%= user.id %>">
+        <td> <%= user.first_name %> </td>
+        <td class='user-points'> <%= user.points %> </td>
+      </tr>
+    <% end %>
+  </ul>
+</section>
+
+<span class='input-container'>
+  <form>
+    <input class='user-input' type="text" data-behavior='lobby_speaker'>
+  </form>
+</span>

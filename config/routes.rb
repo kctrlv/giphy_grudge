@@ -1,3 +1,15 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  get 'game/show'
+
+  root to: 'home#index'
+  resource :lobby, only: [:show]
+
+  get 'auth/slack/callback', to: 'sessions#create'
+
+  get '/logout', to: 'sessions#destroy'
+  post '/login', to: 'sessions#create'
+
+  get '/restricted', to: 'home#restricted'
+
+  get '/game', to: 'game#show'
 end
