@@ -61,7 +61,8 @@ h1 a{
 }
 
 .responses {
-  overflow: scroll;
+  // transform: translate3d(0,0,0);
+  overflow: auto;
   position: fixed;
   bottom: 60px;
   top: 100px;
@@ -91,10 +92,10 @@ h1 a{
 }
 
 .information {
+  overflow: auto;
   text-align: center;
   bottom: 60px;
   top: 100px;
-  overflow: scroll;
   position: fixed;
   right: 10px;
   left: 77%;
