@@ -12,7 +12,8 @@ class LobbyChannel < ApplicationCable::Channel
       ActionCable.server.broadcast 'lobby_channel', {
         action: "userAppear",
         uid: current_user.id,
-        user: current_user.first_name
+        user: current_user.first_name,
+        points: current_user.points
       }
     else
       REDIS.incr("ghost#{current_user.id}")

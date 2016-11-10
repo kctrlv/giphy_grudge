@@ -83,11 +83,12 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
   announceUserOffline: (user) ->
     App.lobby.append('<div class="announce">' + user + ' has left </div>')
 
-  userAppear: (user, uid) ->
+  userAppear: (user, uid, points) ->
     $ ->
       content = '''
       <tr id="''' + uid + '''">
         <td>''' + user + '''</td>
+        <td class='user-points'>''' + points + '''</td>
       </tr>
       '''
       $('.users_online').append(content)
@@ -155,7 +156,6 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     '''
     App.lobby.append(html)
 
-
   gameWinner: (user, votes, image) ->
     App.lobby.clear()
     html = '''
@@ -164,7 +164,10 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     </div>
     '''
     App.lobby.append(html)
-    App.lobby.appendGiphy('---', image, false)
+    App.lobby.appendGiphy('', image, false)
+
+  userUpdatePoints: (uid, points) ->
+    $('tr#' + uid + ' .user-points').text(points)
 
   received: (data) ->
     # Called when there's incoming data on the websocket for this channel
@@ -176,7 +179,7 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
       when "text"
         App.lobby.appendText(data['user'], data['message'], data['has_avatar'])
       when 'userAppear'
-        App.lobby.userAppear(data['user'], data['uid'])
+        App.lobby.userAppear(data['user'], data['uid'], data['points'])
       when 'userDisappear'
         App.lobby.userDisappear(data['user'], data['uid'])
       when 'inform'
@@ -203,6 +206,8 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
         App.lobby.gameDraw()
       when 'game_winner'
         App.lobby.gameWinner(data['user'], data['votes'], data['image'])
+      when 'user_update_points'
+        App.lobby.userUpdatePoints(data['uid'], data['points'])
 
   speak: (message) ->
     @perform 'speak', message: message

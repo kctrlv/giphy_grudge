@@ -112,6 +112,7 @@ class LobbyGame
       # Winner
       winning_image = max_votes.last.last
       winner = responses.select{ |k,v| v == winning_image }.first.first
+      User.find_by(name: winner).add_point
       ActionCable.server.broadcast 'lobby_channel', {
         action: 'game_winner',
         user: winner.split(' ').first,
