@@ -91,7 +91,8 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
         <td class='user-points'>''' + points + '''</td>
       </tr>
       '''
-      $('.users_online').append(content)
+      if ($("#" + uid).length == 0)
+        $('.users_online').append(content)
       App.lobby.announceUserOnline(user)
 
   userDisappear: (user, uid) ->
