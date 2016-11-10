@@ -101,6 +101,7 @@ class LobbyChannel < ApplicationCable::Channel
 
   def playRound
     return nil unless REDIS.smembers('players').empty?
+    return nil if REDIS.smembers('onlineUsers').count < 3
     player_ids = REDIS.smembers('onlineUsers')
     players = player_ids.map { |id| User.find_by(id: id) }.compact
     LobbyGame.start(players)
