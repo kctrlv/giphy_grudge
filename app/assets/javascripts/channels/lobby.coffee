@@ -65,6 +65,14 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
             <td>.r</td>
             <td>Post random giphy</td>
           </tr>
+          <tr>
+            <td>.play</td>
+            <td>Play a round of giphygrudge</td>
+          </tr>
+          <tr>
+            <td>.stop</td>
+            <td>Stops the current round</td>
+          </tr>
         </table>
     '''
     App.lobby.append(html)
@@ -101,6 +109,16 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
     '''
     App.lobby.append(html)
 
+  gameStopped: (user) ->
+    App.lobby.clear()
+    html = '''
+    <div class='inform'>
+      The game has been stopped by'''+
+      user + '''
+    </div>
+    '''
+    App.lobby.append(html)
+
   gameCard: (card) ->
     html = '''
     <div class='card'>''' +
@@ -120,6 +138,9 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
 
   gameReceivedVote: (user) ->
     App.lobby.append('<div class="announce">' + user + ' has left a vote. Only the last vote is counted.</div>')
+
+  gameReceivedSelfVote: (user) ->
+    App.lobby.append('<div class="announce">' + user + ' tried to vote for their own image. Please try again. </div>')
 
   gameDraw: ->
     App.lobby.clear()
@@ -162,6 +183,8 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
         App.lobby.gameCard(data['card'])
       when 'game_listen'
         App.lobby.gameListen()
+      when 'game_stopped'
+        App.lobby.gameStopped(data['user'])
       when 'game_stop_listen'
         App.lobby.gameStopListen()
       when 'game_received_reply'
@@ -170,6 +193,8 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
         App.lobby.gameStartVote(data['candidates'])
       when 'game_received_vote'
         App.lobby.gameReceivedVote(data['user'])
+      when 'game_received_self_vote'
+        App.lobby.gameReceivedSelfVote(data['user'])
       when 'game_draw'
         App.lobby.gameDraw()
       when 'game_winner'

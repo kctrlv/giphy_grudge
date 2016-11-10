@@ -34,7 +34,15 @@ class LobbyChannel < ApplicationCable::Channel
 
   def speak(data)
     if @listen == true
-      game_speak(data)
+      if data['message'] == '.stop'
+        ActionCable.server.broadcast 'lobby_channel', {
+          action: 'game_stopped',
+          user: current_user.first_name
+        }
+        return LobbyGame.finish
+      else
+        game_speak(data)
+      end
     else
       user_handle = current_user.avatar || current_user.first_name
       action, message = determine_action_and_message(data)

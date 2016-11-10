@@ -79,13 +79,24 @@ class LobbyGame
     }
   end
 
+  def self.voted_for_self(name, vote)
+    responses[name] == vote
+  end
+
   def self.get_vote(name, vote)
-    REDIS.hset('votes', name, vote)
-    ActionCable.server.broadcast 'lobby_channel', {
-      action: 'game_received_vote',
-      user: name.split(' ').first
-    }
-    finish_game if all_voted
+    if voted_for_self(name, vote)
+      ActionCable.server.broadcast 'lobby_channel', {
+        action: 'game_received_self_vote',
+        user: name.split(' ').first
+      }
+    else
+      REDIS.hset('votes', name, vote)
+      ActionCable.server.broadcast 'lobby_channel', {
+        action: 'game_received_vote',
+        user: name.split(' ').first
+      }
+      finish_game if all_voted
+    end
   end
 
   def self.finish_game
