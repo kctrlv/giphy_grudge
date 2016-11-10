@@ -7,7 +7,7 @@
   </div>
 </section>
 
-<section class='information'>
+<div class='information'>
   <h5>Online Users</h5>
   <table class="users_online">
     <% @onlineUsers.each do |user| %>
@@ -16,11 +16,11 @@
         <td class='user-points'> <%= user.points %> </td>
       </tr>
     <% end %>
-  </ul>
-</section>
+  </table>
+</div>
 
-<span class='input-container'>
+<div class='input-container'>
   <form>
-    <input class='user-input' type="text" data-behavior='lobby_speaker'>
+    <input class='user-input' type="text" data-behavior='lobby_speaker' data-autogrow="false">
   </form>
-</span>
+</div>
