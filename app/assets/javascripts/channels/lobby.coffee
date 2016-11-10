@@ -67,7 +67,7 @@ App.lobby = App.cable.subscriptions.create "LobbyChannel",
           </tr>
           <tr>
             <td>.play</td>
-            <td>Play a round of giphygrudge</td>
+            <td>Play a round of giphygrudge, requires minimum 3 players</td>
           </tr>
           <tr>
             <td>.stop</td>
